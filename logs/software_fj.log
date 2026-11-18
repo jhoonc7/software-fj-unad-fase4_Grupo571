@@ -124,3 +124,84 @@
 2026-11-10 21:14:58 | WARNING  | main         | Operación 20 fallida: [SFJ-201] Descuento fuera de rango: 1.5.
 2026-11-10 21:14:58 | DEBUG    | main         | Operación 20 finalizada
 2026-11-10 21:14:58 | INFO     | main         | === Simulación finalizada: {'exitosas': 8, 'fallidas': 12} ===
+2026-11-17 20:34:10 | INFO     | gestor       | === Sistema Software FJ iniciado ===
+2026-11-17 20:34:10 | INFO     | gestor       | Cliente registrado: CLI-001 | Ana María Rojas | Doc. 1012345678 | ana***@correo.com
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 01 finalizada
+2026-11-17 20:34:10 | ERROR    | gestor       | Registro de cliente rechazado: [SFJ-101] El correo 'pedro.gomez@' no tiene un formato válido.
+2026-11-17 20:34:10 | WARNING  | main         | Operación 02 fallida: [SFJ-101] El correo 'pedro.gomez@' no tiene un formato válido.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 02 finalizada
+2026-11-17 20:34:10 | ERROR    | gestor       | Registro de cliente rechazado: [SFJ-101] El nombre 'Luis 2024' no puede contener números.
+2026-11-17 20:34:10 | WARNING  | main         | Operación 03 fallida: [SFJ-101] El nombre 'Luis 2024' no puede contener números.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 03 finalizada
+2026-11-17 20:34:10 | INFO     | gestor       | Cliente registrado: CLI-002 | Carlos Pérez | Doc. 1098765432 | car***@empresa.co
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 04 finalizada
+2026-11-17 20:34:10 | ERROR    | gestor       | Cliente duplicado: documento 1012345678
+2026-11-17 20:34:10 | WARNING  | main         | Operación 05 fallida: [SFJ-102] Ya existe un cliente con documento 1012345678.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 05 finalizada
+2026-11-17 20:34:10 | INFO     | gestor       | Servicio registrado: SRV-001 | Sala 'Sala Innovación' | Capacidad 20 | $80,000/h | Disponible
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 06 finalizada
+2026-11-17 20:34:10 | INFO     | gestor       | Servicio registrado: SRV-002 | Equipo 'Portátil Core i7' | 10 unid. | $15,000/h + depósito $100,000 | Disponible
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 07 finalizada
+2026-11-17 20:34:10 | INFO     | gestor       | Servicio registrado: SRV-003 | Asesoría 'Arquitectura de Software' (Python POO, nivel experto) | $120,000/h | Disponible
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 08 finalizada
+2026-11-17 20:34:10 | ERROR    | gestor       | Servicio rechazado: [SFJ-201] Tarifa por hora inválida: -5000.
+2026-11-17 20:34:10 | WARNING  | main         | Operación 09 fallida: [SFJ-201] Tarifa por hora inválida: -5000.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 09 finalizada
+2026-11-17 20:34:10 | ERROR    | gestor       | Servicio rechazado: [SFJ-201] Nivel de asesoría 'maestro' no existe.
+2026-11-17 20:34:10 | WARNING  | main         | Operación 10 fallida: [SFJ-201] Nivel de asesoría 'maestro' no existe.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 10 finalizada
+2026-11-17 20:34:10 | ERROR    | gestor       | Faltan parámetros para crear AlquilerEquipo: AlquilerEquipo.__init__() missing 2 required positional arguments: 'tarifa_hora' and 'unidades'
+2026-11-17 20:34:10 | WARNING  | main         | Operación 11 fallida: [SFJ-301] No se pudo crear el servicio AlquilerEquipo: parámetros incompletos.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 11 finalizada
+2026-11-17 20:34:10 | INFO     | gestor       | Reserva creada: RES-001 | Ana María Rojas -> Sala Innovación | 3 h | Pendiente | sin calcular
+2026-11-17 20:34:10 | INFO     | reservas     | Reserva RES-001 confirmada por $314,160.00
+2026-11-17 20:34:10 | INFO     | reservas     | Reserva RES-001 procesada. Cambio: $85,840.00
+2026-11-17 20:34:10 | DEBUG    | reservas     | Intento de procesamiento de RES-001 finalizado (estado: Procesada)
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 12 finalizada
+2026-11-17 20:34:10 | ERROR    | gestor       | Reserva rechazada: [SFJ-401] No se pudo crear la reserva: La sala 'Sala Innovación' admite 20 personas; se pidieron 35. (causa: [SFJ-201] La sala 'Sala Innovación' admite 20 personas; se pidieron 35.)
+2026-11-17 20:34:10 | WARNING  | main         | Operación 13 fallida: [SFJ-401] No se pudo crear la reserva: La sala 'Sala Innovación' admite 20 personas; se pidieron 35.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 13 finalizada
+2026-11-17 20:34:10 | INFO     | gestor       | Reserva creada: RES-002 | Carlos Pérez -> Portátil Core i7 | 24 h | Pendiente | sin calcular
+2026-11-17 20:34:10 | INFO     | reservas     | Reserva RES-002 confirmada por $1,263,780.00
+2026-11-17 20:34:10 | ERROR    | reservas     | Fallo al procesar la reserva RES-002
+2026-11-17 20:34:10 | DEBUG    | reservas     | Intento de procesamiento de RES-002 finalizado (estado: Confirmada)
+2026-11-17 20:34:10 | WARNING  | main         | Operación 14 fallida: [SFJ-401] Pago insuficiente para RES-002: $200,000.00 de $1,263,780.00.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 14 finalizada
+2026-11-17 20:34:10 | INFO     | reservas     | Reserva RES-002 procesada. Cambio: $236,220.00
+2026-11-17 20:34:10 | DEBUG    | reservas     | Intento de procesamiento de RES-002 finalizado (estado: Procesada)
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 15 finalizada
+2026-11-17 20:34:10 | ERROR    | gestor       | Reserva rechazada: [SFJ-401] No se pudo crear la reserva: El servicio 'Arquitectura de Software' no está disponible. (causa: [SFJ-301] El servicio 'Arquitectura de Software' no está disponible.)
+2026-11-17 20:34:10 | WARNING  | main         | Operación 16 fallida: [SFJ-401] No se pudo crear la reserva: El servicio 'Arquitectura de Software' no está disponible.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 16 finalizada
+2026-11-17 20:34:10 | INFO     | gestor       | Reserva creada: RES-003 | Carlos Pérez -> Arquitectura de Software | 2 h | Pendiente | sin calcular
+2026-11-17 20:34:10 | INFO     | reservas     | Reserva RES-003 confirmada por $573,580.00
+2026-11-17 20:34:10 | WARNING  | reservas     | Reserva RES-003 cancelada. Motivo: El cliente reprogramó su agenda
+2026-11-17 20:34:10 | ERROR    | reservas     | Fallo al procesar la reserva RES-003
+2026-11-17 20:34:10 | DEBUG    | reservas     | Intento de procesamiento de RES-003 finalizado (estado: Cancelada)
+2026-11-17 20:34:10 | WARNING  | main         | Operación 17 fallida: [SFJ-402] La reserva RES-003 está Cancelada; debe estar Confirmada.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 17 finalizada
+2026-11-17 20:34:10 | ERROR    | gestor       | Reserva rechazada: [SFJ-401] No se pudo crear la reserva: Falta la duración de la reserva. (causa: [SFJ-201] Falta la duración de la reserva.)
+2026-11-17 20:34:10 | WARNING  | main         | Operación 18 fallida: [SFJ-401] No se pudo crear la reserva: Falta la duración de la reserva.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 18 finalizada
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 19 finalizada
+2026-11-17 20:34:10 | WARNING  | main         | Operación 20 fallida: [SFJ-201] Descuento fuera de rango: 1.5.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 20 finalizada
+2026-11-17 20:34:10 | WARNING  | main         | Operación 21 fallida: [SFJ-101] No existe un cliente con documento 9999999999.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 21 finalizada
+2026-11-17 20:34:10 | INFO     | gestor       | Reserva creada: RES-004 | Ana María Rojas -> Arquitectura de Software | 2 h | Pendiente | sin calcular
+2026-11-17 20:34:10 | INFO     | reservas     | Reserva RES-004 confirmada por $411,264.00
+2026-11-17 20:34:10 | INFO     | reservas     | Reserva RES-004 procesada. Cambio: $88,736.00
+2026-11-17 20:34:10 | DEBUG    | reservas     | Intento de procesamiento de RES-004 finalizado (estado: Procesada)
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 22 finalizada
+2026-11-17 20:34:10 | WARNING  | main         | Operación 23 fallida: [SFJ-201] El cupón 'PROMO99' no existe.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 23 finalizada
+2026-11-17 20:34:10 | INFO     | gestor       | Reserva creada: RES-005 | Carlos Pérez -> Sala Innovación | 1 h | Pendiente | sin calcular
+2026-11-17 20:34:10 | INFO     | reservas     | Reserva RES-005 confirmada por $95,200.00
+2026-11-17 20:34:10 | ERROR    | reservas     | Fallo al procesar la reserva RES-005
+2026-11-17 20:34:10 | DEBUG    | reservas     | Intento de procesamiento de RES-005 finalizado (estado: Confirmada)
+2026-11-17 20:34:10 | WARNING  | main         | Operación 24 fallida: [SFJ-201] Pago inválido: 'doscientos mil'.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 24 finalizada
+2026-11-17 20:34:10 | WARNING  | main         | Operación 25 fallida: [SFJ-501] Costo calculado inconsistente: $-404,800.00.
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 25 finalizada
+2026-11-17 20:34:10 | DEBUG    | main         | Operación 26 finalizada
+2026-11-17 20:34:10 | INFO     | main         | === Simulación finalizada: {'exitosas': 10, 'fallidas': 16} ===
