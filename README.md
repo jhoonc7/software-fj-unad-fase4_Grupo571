@@ -78,12 +78,12 @@ software-fj/
 
 ## Integrantes – Grupo 213023_571
 
-<img width="4032" height="1987" alt="image" src="https://github.com/user-attachments/assets/c325f8f2-07aa-4a6d-9f38-cb9099764978" />
+<img width="4032" height="1987" alt="image" src="https://github.com/user-attachments/assets/0ca60f10-a2f7-4c79-b358-d21975428e4e" />
 
 | Integrante | Aporte en el repositorio |
 |---|---|
 | Jhon Frey Acosta Gómez | Estructura del proyecto, `excepciones.py`, `registro.py`, `main.py` |
 | Yonatan Fabian Cagua Lopez | `entidades.py` (EntidadBase y Cliente), control de stock en equipos (`servicios.py`, `reservas.py`), integración de cupones en reservas, consultas en `gestor.py`, pruebas 21–26 y documentación línea a línea |
-| Juan David Mora Garzón | Participación en la revisión y validación del módulo servicios.py, verificando la aplicación de abstracción, herencia, polimorfismo, manejo de excepciones y documentación técnica para la consolidación de la solución final. |
+| Juan David Mora Garzón | Participación en la revisión técnica y validación del módulo servicios.py, verificando la correcta aplicación de los principios de Programación Orientada a Objetos (abstracción, herencia y polimorfismo), así como el manejo de excepciones personalizadas y la documentación técnica utilizada para la consolidación de la solución final.|
 | Integrante 4 | `reservas.py` (Reserva y estados) |
 | Integrante 5 | `gestor.py`, pruebas y documentación |
