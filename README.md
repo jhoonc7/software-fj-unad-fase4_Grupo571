@@ -15,14 +15,14 @@ de excepciones y registro de eventos en un archivo de logs.
 python main.py
 ```
 
-El programa ejecuta 20 operaciones simuladas (válidas e inválidas) y al final muestra un reporte.
+El programa ejecuta 26 operaciones simuladas (válidas e inválidas) y al final muestra un reporte.
 Todos los eventos y errores quedan en `logs/software_fj.log`.
 
 ## Estructura
 
 ```
 software-fj/
-├── main.py                  # Simulación de 20 operaciones y reporte final
+├── main.py                  # Simulación de 26 operaciones y reporte final
 ├── software_fj/
 │   ├── __init__.py          # Exporta las clases públicas del paquete
 │   ├── excepciones.py       # Jerarquía de excepciones personalizadas
@@ -43,12 +43,12 @@ software-fj/
 | Herencia | `Cliente`, `Servicio`, `Reserva` ← `EntidadBase`; `ReservaSala`, `AlquilerEquipo`, `Asesoria` ← `Servicio` |
 | Polimorfismo | `costo_base()`, `validar_parametros()` y `describir()` sobrescritos en cada servicio |
 | Encapsulación | Atributos privados (`__nombre`, `__correo`…) con `@property` y setters que validan |
-| Sobrecarga | `calcular_costo(duracion[, impuesto[, descuento]])` y `aplicar_descuento()` con `singledispatchmethod` (porcentaje `float` o cupón `str`) |
-| Excepciones personalizadas | `SoftwareFJError` y 7 subclases con código de error |
+| Sobrecarga | `calcular_costo(duracion[, impuesto[, descuento[, bono_regalo]]])` y `aplicar_descuento()` con `singledispatchmethod` (porcentaje `int`/`float` o cupón `str`) |
+| Excepciones personalizadas | `SoftwareFJError` y 7 subclases con código de error (`SFJ-101` a `SFJ-501`) |
 | `try/except` | `Reserva.validar()`, `gestor.registrar_servicio()` |
 | `try/except/else` | `Reserva.confirmar()`, `gestor.registrar_cliente()` |
 | `try/except/finally` | `Reserva.procesar()`, `main.ejecutar()` |
-| Encadenamiento (`raise … from …`) | `TypeError` → `ServicioNoDisponibleError`; `ParametroInvalidoError` → `ReservaInvalidaError` |
+| Encadenamiento (`raise … from …`) | `TypeError` → `ServicioNoDisponibleError`; `ParametroInvalidoError` → `ReservaInvalidaError`; `ValueError` → `ParametroInvalidoError` |
 | Logs | `logging` en `logs/software_fj.log` (INFO, WARNING, ERROR, DEBUG) |
 
 ## Operaciones simuladas
@@ -69,13 +69,19 @@ software-fj/
 | 18 | Reserva sin duración | Error encadenado |
 | 19 | Variantes sobrecargadas de costos y descuentos | Éxito |
 | 20 | Descuento fuera de rango | Error controlado |
+| 21 | Buscar cliente inexistente por documento | Error controlado (`SFJ-101`) |
+| 22 | Reserva aplicando cupón `'UNAD20'` al confirmar y búsqueda por ID | Éxito |
+| 23 | Intentar aplicar un cupón promocional inexistente | Error controlado (`SFJ-201`) |
+| 24 | Procesar pago con texto inválido (no numérico) | Error encadenado (`ValueError` → `SFJ-201`) |
+| 25 | Cálculo inconsistente por bono regalo mayor al subtotal | Error controlado (`SFJ-501`) |
+| 26 | Verificar descuento real de stock en equipos e historial por cliente | Éxito |
 
 ## Integrantes – Grupo 213023_571
 
 | Integrante | Aporte en el repositorio |
 |---|---|
 | Jhon Frey Acosta Gómez | Estructura del proyecto, `excepciones.py`, `registro.py`, `main.py` |
-| Yonatan Fabian Cagua Lopez | `entidades.py` (EntidadBase y Cliente) |
+| Yonatan Fabian Cagua Lopez | `entidades.py` (EntidadBase y Cliente), control de stock en equipos (`servicios.py`, `reservas.py`), integración de cupones en reservas, consultas en `gestor.py`, pruebas 21–26 y documentación línea a línea |
 | Integrante 3 | `servicios.py` (Servicio y servicios especializados) |
 | Integrante 4 | `reservas.py` (Reserva y estados) |
 | Integrante 5 | `gestor.py`, pruebas y documentación |
