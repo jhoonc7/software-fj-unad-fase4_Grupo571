@@ -8,127 +8,132 @@ try/except, try/except/else, try/except/finally y encadenamiento de
 excepciones (raise ... from ...).
 """
 
-from enum import Enum  # Para definir los estados posibles de una reserva
+from enum import Enum  # Importa Enum para definir un conjunto fijo de estados
 
-from .entidades import Cliente, EntidadBase  # Cliente y clase abstracta general
-from .excepciones import (  # Excepciones usadas en las reservas
+from .entidades import Cliente, EntidadBase  # Importa Cliente y la superclase EntidadBase
+from .excepciones import (  # Importa las excepciones personalizadas necesarias
     OperacionNoPermitidaError,
     ParametroInvalidoError,
     ReservaInvalidaError,
     ServicioNoDisponibleError,
     SoftwareFJError,
 )
-from .registro import obtener_logger  # Logger del sistema
-from .servicios import IVA, Servicio  # Tarifa de IVA y clase base de servicios
+from .registro import obtener_logger  # Importa la función configuradora de logs
+from .servicios import IVA, AlquilerEquipo, Servicio  # Importa constante IVA, AlquilerEquipo y clase Servicio
 
-log = obtener_logger()  # Logger compartido por el módulo
-
-
-class EstadoReserva(Enum):  # Estados del ciclo de vida de una reserva
-    PENDIENTE = "Pendiente"  # Recién creada
-    CONFIRMADA = "Confirmada"  # Aprobada y con costo calculado
-    CANCELADA = "Cancelada"  # Anulada por el cliente o el sistema
-    PROCESADA = "Procesada"  # Pagada y finalizada
+log = obtener_logger()  # Instancia el logger para registrar eventos de este módulo
 
 
-class Reserva(EntidadBase):  # La reserva también es una entidad del sistema
+class EstadoReserva(Enum):  # Enumeración con los 4 estados posibles de una reserva
+    PENDIENTE = "Pendiente"  # Estado inicial cuando se crea pero no se ha confirmado
+    CONFIRMADA = "Confirmada"  # Estado cuando se valida el costo y se separa el cupo/equipo
+    CANCELADA = "Cancelada"  # Estado cuando se anula la reserva antes de pagarse
+    PROCESADA = "Procesada"  # Estado final cuando el cliente realiza el pago
+
+
+class Reserva(EntidadBase):  # Clase Reserva que hereda identificador y estructura de EntidadBase
     """Reserva de un servicio realizada por un cliente."""
 
-    def __init__(self, cliente, servicio, duracion, **parametros):
-        super().__init__("RES")  # Id con prefijo RES
-        self._cliente = cliente  # Cliente que reserva
-        self._servicio = servicio  # Servicio reservado
-        self._duracion = duracion  # Horas reservadas
-        self._parametros = parametros  # Datos extra (personas, cantidad, modalidad)
-        self._estado = EstadoReserva.PENDIENTE  # Toda reserva inicia pendiente
-        self._costo = None  # Aún no se ha calculado el costo
-        self.validar()  # Valida que la reserva sea coherente
-
-    # ---------------- propiedades de solo lectura ----------------
-    @property
-    def estado(self):
-        return self._estado
+    def __init__(self, cliente, servicio, duracion, **parametros):  # Constructor de la reserva
+        super().__init__("RES")  # Inicializa EntidadBase con el prefijo 'RES' (ej. RES-001)
+        self._cliente = cliente  # Asigna el objeto Cliente asociado a la reserva
+        self._servicio = servicio  # Asigna el objeto Servicio que se desea contratar
+        self._duracion = duracion  # Guarda la cantidad de horas solicitadas
+        self._parametros = parametros  # Guarda diccionario de argumentos extra (personas, cantidad, modalidad)
+        self._estado = EstadoReserva.PENDIENTE  # Toda reserva nace en estado PENDIENTE
+        self._costo = None  # Inicializa el costo en None hasta que se confirme la reserva
+        self.validar()  # Ejecuta la validación inicial al construir el objeto
 
     @property
-    def costo(self):
-        return self._costo
+    def estado(self):  # Propiedad getter para consultar el estado actual
+        return self._estado  # Retorna el miembro de EstadoReserva correspondiente
 
     @property
-    def cliente(self):
-        return self._cliente
+    def costo(self):  # Propiedad getter para consultar el costo total calculado
+        return self._costo  # Retorna el monto numérico o None si no se ha confirmado
 
     @property
-    def servicio(self):
-        return self._servicio
+    def cliente(self):  # Propiedad getter para obtener el cliente dueño de la reserva
+        return self._cliente  # Retorna la instancia de Cliente
 
-    def validar(self):  # Implementa el método abstracto
-        if not isinstance(self._cliente, Cliente):  # El cliente debe ser un objeto Cliente
-            raise ReservaInvalidaError("La reserva necesita un cliente válido.")
-        if not isinstance(self._servicio, Servicio):  # El servicio debe ser un objeto Servicio
-            raise ReservaInvalidaError("La reserva necesita un servicio válido.")
-        try:  # try/except con encadenamiento de excepciones
-            self._servicio.verificar_disponibilidad()  # ¿El servicio está activo?
-            self._servicio.validar_parametros(self._duracion, **self._parametros)  # ¿Parámetros correctos?
-        except (ServicioNoDisponibleError, ParametroInvalidoError) as error:  # Captura el error original
-            # Se lanza un error de más alto nivel conservando la causa original (__cause__)
+    @property
+    def servicio(self):  # Propiedad getter para obtener el servicio reservado
+        return self._servicio  # Retorna la instancia de Servicio
+
+    def validar(self):  # Implementación del método abstracto validar()
+        if not isinstance(self._cliente, Cliente):  # Comprueba que _cliente sea realmente un objeto Cliente
+            raise ReservaInvalidaError("La reserva necesita un cliente válido.")  # Lanza error SFJ-401 si no lo es
+        if not isinstance(self._servicio, Servicio):  # Comprueba que _servicio sea una instancia de Servicio
+            raise ReservaInvalidaError("La reserva necesita un servicio válido.")  # Lanza error SFJ-401 si no lo es
+        try:  # Bloque try/except para capturar fallos del servicio y encadenarlos
+            self._servicio.verificar_disponibilidad()  # Verifica que el servicio esté activo
+            self._servicio.validar_parametros(self._duracion, **self._parametros)  # Valida horas y requisitos propios
+        except (ServicioNoDisponibleError, ParametroInvalidoError) as error:  # Si el servicio lanza error...
+            # ...encadena la excepción original (from error) dentro de ReservaInvalidaError
             raise ReservaInvalidaError(f"No se pudo crear la reserva: {error.mensaje}") from error
-        return True
+        return True  # Retorna True si todas las validaciones fueron exitosas
 
     def confirmar(self, impuesto=IVA, descuento=None):
-        """Confirma la reserva y calcula su costo (try/except/else)."""
-        if self._estado is not EstadoReserva.PENDIENTE:  # Solo se confirman reservas pendientes
-            raise OperacionNoPermitidaError(
+        """Confirma la reserva, descuenta stock si aplica y calcula su costo (try/except/else)."""
+        if self._estado is not EstadoReserva.PENDIENTE:  # Verifica que la reserva esté en estado PENDIENTE
+            raise OperacionNoPermitidaError(  # Impide confirmar reservas ya confirmadas, canceladas o procesadas
                 f"La reserva {self.id} está {self._estado.value}; no se puede confirmar."
             )
-        try:  # Intenta calcular el costo
-            costo = self._servicio.calcular_costo(  # Llamado polimórfico al servicio
+        try:  # Intenta realizar el cálculo del costo total
+            costo = self._servicio.calcular_costo(  # Llama polimórficamente a calcular_costo del servicio
                 self._duracion, impuesto, descuento, **self._parametros
             )
-        except SoftwareFJError as error:  # Si falla el cálculo...
-            log.error("Error al confirmar %s: %s", self.id, error)  # ...se registra en el log
-            raise ReservaInvalidaError(f"No se pudo confirmar {self.id}.") from error  # Encadenamiento
-        else:  # Solo se ejecuta si NO hubo excepción
-            self._costo = costo  # Guarda el costo calculado
-            self._estado = EstadoReserva.CONFIRMADA  # Cambia el estado
-            log.info("Reserva %s confirmada por $%s", self.id, f"{costo:,.2f}")  # Evento en el log
-            return costo  # Devuelve el costo al llamador
+            # ---- MEJORA YONATAN CAGUA: Descontar unidades del inventario al confirmar AlquilerEquipo ----
+            if isinstance(self._servicio, AlquilerEquipo):  # Si el servicio reservado es un equipo tecnológico...
+                self._servicio.ocupar_unidades(self._parametros.get("cantidad", 1))  # ...resta las unidades del stock
+        except SoftwareFJError as error:  # Si ocurre cualquier error de negocio durante el cálculo...
+            log.error("Error al confirmar %s: %s", self.id, error)  # ...deja constancia en el archivo .log
+            raise ReservaInvalidaError(f"No se pudo confirmar {self.id}.") from error  # Encadena y propaga el error
+        else:  # Bloque else: se ejecuta ÚNICAMENTE si el bloque try no lanzó ninguna excepción
+            self._costo = costo  # Almacena el costo definitivo en el atributo _costo
+            self._estado = EstadoReserva.CONFIRMADA  # Actualiza el estado a CONFIRMADA
+            log.info("Reserva %s confirmada por $%s", self.id, f"{costo:,.2f}")  # Registra el éxito en el log
+            return costo  # Devuelve el valor calculado
 
     def cancelar(self, motivo="Sin motivo"):
-        """Cancela la reserva si aún no ha sido procesada."""
-        if self._estado in (EstadoReserva.CANCELADA, EstadoReserva.PROCESADA):  # Estados finales
-            raise OperacionNoPermitidaError(
+        """Cancela la reserva y libera stock si estaba confirmada."""
+        if self._estado in (EstadoReserva.CANCELADA, EstadoReserva.PROCESADA):  # Verifica si ya está en estado final
+            raise OperacionNoPermitidaError(  # No permite cancelar algo que ya fue pagado o anulado antes
                 f"La reserva {self.id} ya está {self._estado.value}; no se puede cancelar."
             )
-        self._estado = EstadoReserva.CANCELADA  # Cambia el estado
-        log.warning("Reserva %s cancelada. Motivo: %s", self.id, motivo)  # Evento en el log
+        # ---- MEJORA YONATAN CAGUA: Devolver unidades al inventario si se cancela un alquiler confirmado ----
+        if self._estado is EstadoReserva.CONFIRMADA and isinstance(self._servicio, AlquilerEquipo):
+            self._servicio.liberar_unidades(self._parametros.get("cantidad", 1))  # Reintegra los equipos al stock
+        self._estado = EstadoReserva.CANCELADA  # Cambia el estado de la reserva a CANCELADA
+        log.warning("Reserva %s cancelada. Motivo: %s", self.id, motivo)  # Registra advertencia en el archivo .log
 
     def procesar(self, pago):
-        """Procesa el pago de una reserva confirmada (try/except/finally)."""
-        try:  # Bloque protegido
-            if self._estado is not EstadoReserva.CONFIRMADA:  # Solo se procesan confirmadas
-                raise OperacionNoPermitidaError(
+        """Procesa el pago de una reserva confirmada empleando try/except/finally."""
+        try:  # Inicia bloque protegido para el procesamiento del pago
+            if self._estado is not EstadoReserva.CONFIRMADA:  # Exige que la reserva esté previamente CONFIRMADA
+                raise OperacionNoPermitidaError(  # Lanza error SFJ-402 si intentan pagar una pendiente o cancelada
                     f"La reserva {self.id} está {self._estado.value}; debe estar Confirmada."
                 )
-            try:  # Conversión del pago: puede fallar con ValueError o TypeError
-                pago = float(pago)
-            except (TypeError, ValueError) as error:  # Error de Python nativo...
-                raise ParametroInvalidoError(f"Pago inválido: {pago!r}.") from error  # ...encadenado al dominio
-            if pago < self._costo:  # Pago insuficiente
-                raise ReservaInvalidaError(
+            try:  # Sub-bloque try para validar que el pago ingresado sea convertible a número
+                pago = float(pago)  # Intenta convertir el parámetro pago a punto flotante
+            except (TypeError, ValueError) as error:  # Captura error nativo de Python si meten letras o None
+                raise ParametroInvalidoError(f"Pago inválido: {pago!r}.") from error  # Encadena a excepción del dominio
+            if pago < self._costo:  # Comprueba si el dinero entregado es menor al costo de la reserva
+                raise ReservaInvalidaError(  # Lanza error SFJ-401 por dinero insuficiente
                     f"Pago insuficiente para {self.id}: ${pago:,.2f} de ${self._costo:,.2f}."
                 )
-            self._estado = EstadoReserva.PROCESADA  # Pago correcto: reserva finalizada
-            cambio = round(pago - self._costo, 2)  # Calcula el cambio a devolver
-            log.info("Reserva %s procesada. Cambio: $%s", self.id, f"{cambio:,.2f}")
-            return cambio  # Devuelve el cambio
-        except SoftwareFJError:  # Cualquier error del dominio...
-            log.error("Fallo al procesar la reserva %s", self.id)  # ...se registra
-            raise  # ...y se propaga sin perder el tipo original
-        finally:  # Se ejecuta SIEMPRE, haya o no error
+            self._estado = EstadoReserva.PROCESADA  # Si el pago es válido y suficiente, pasa a estado PROCESADA
+            cambio = round(pago - self._costo, 2)  # Calcula las vueltas o cambio a devolver al cliente
+            log.info("Reserva %s procesada. Cambio: $%s", self.id, f"{cambio:,.2f}")  # Registra pago exitoso en log
+            return cambio  # Retorna el cambio calculado
+        except SoftwareFJError:  # Si ocurre cualquier excepción de SoftwareFJError...
+            log.error("Fallo al procesar la reserva %s", self.id)  # ...registra el fallo en el archivo .log
+            raise  # ...y vuelve a lanzar la excepción para que el programa principal se entere
+        finally:  # Bloque finally: se ejecuta SIEMPRE (haya ocurrido error o todo haya salido bien)
             log.debug("Intento de procesamiento de %s finalizado (estado: %s)",
-                      self.id, self._estado.value)
+                      self.id, self._estado.value)  # Deja traza de auditoría en el log
 
-    def describir(self):  # Implementa el método abstracto
-        costo = f"${self._costo:,.2f}" if self._costo is not None else "sin calcular"
+    def describir(self):  # Implementación del método abstracto describir()
+        costo = f"${self._costo:,.2f}" if self._costo is not None else "sin calcular"  # Formatea el costo si existe
         return (f"{self.id} | {self._cliente.nombre} -> {self._servicio.nombre} | "
-                f"{self._duracion} h | {self._estado.value} | {costo}")
+                f"{self._duracion} h | {self._estado.value} | {costo}")  # Retorna resumen de la reserva
