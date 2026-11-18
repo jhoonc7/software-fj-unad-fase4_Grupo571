@@ -66,16 +66,37 @@
 [20] Cálculo con descuento fuera de rango (150 %)
      ✗ ERROR CONTROLADO: [SFJ-201] Descuento fuera de rango: 1.5.
 
+[21] Buscar cliente inexistente por documento
+     ✗ ERROR CONTROLADO: [SFJ-101] No existe un cliente con documento 9999999999.
+
+[22] Reserva aplicando cupón institucional 'UNAD20' directamente al confirmar
+     ✓ OK: RES-004 | Ana María Rojas -> Arquitectura de Software | 2 h | Procesada | $411,264.00 | Cupón UNAD20 aplicado | cambio $88,736.00
+
+[23] Intentar aplicar un cupón promocional inexistente
+     ✗ ERROR CONTROLADO: [SFJ-201] El cupón 'PROMO99' no existe.
+
+[24] Procesar pago con texto inválido (encadenamiento de ValueError)
+     ✗ ERROR CONTROLADO: [SFJ-201] Pago inválido: 'doscientos mil'.
+       ↳ causa original: ValueError: could not convert string to float: 'doscientos mil'
+
+[25] Cálculo de costo inconsistente por bono regalo mayor al subtotal (SFJ-501)
+     ✗ ERROR CONTROLADO: [SFJ-501] Costo calculado inconsistente: $-404,800.00.
+
+[26] Verificar descuento de inventario en equipos e historial por cliente
+     ✓ OK: Stock actual de 'Portátil Core i7': 7 unid. | Reservas de Ana: 2
+
 ==============================================================================
  REPORTE FINAL
 ==============================================================================
   • RES-001 | Ana María Rojas -> Sala Innovación | 3 h | Procesada | $314,160.00
   • RES-002 | Carlos Pérez -> Portátil Core i7 | 24 h | Procesada | $1,263,780.00
   • RES-003 | Carlos Pérez -> Arquitectura de Software | 2 h | Cancelada | $573,580.00
+  • RES-004 | Ana María Rojas -> Arquitectura de Software | 2 h | Procesada | $411,264.00
+  • RES-005 | Carlos Pérez -> Sala Innovación | 1 h | Confirmada | $95,200.00
 
-  Clientes: 2 | Servicios: 3 | Reservas: 3 (procesadas 2, canceladas 1)
-  Ingresos procesados: $1,577,940.00
-  Operaciones exitosas: 8 | con error controlado: 12
-  Log de eventos: /home/claude/software-fj/logs/software_fj.log
+  Clientes: 2 | Servicios: 3 | Reservas: 5 (procesadas 3, canceladas 1)
+  Ingresos procesados: $1,989,204.00
+  Operaciones exitosas: 10 | con error controlado: 16
+  Log de eventos: C:\Users\lopez\Downloads\software-fj\software-fj\logs\software_fj.log
 
   El sistema terminó la simulación sin interrupciones.
