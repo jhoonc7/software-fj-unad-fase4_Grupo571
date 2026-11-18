@@ -155,13 +155,52 @@ def main():
     ejecutar(20, "Cálculo con descuento fuera de rango (150 %)",
              lambda: ctx["sala"].calcular_costo(2, IVA, 1.5, personas=5))
 
+    # ---- APORTES YONATAN CAGUA: PRUEBAS DE COBERTURA TOTAL Y CONTROL DE INVENTARIO (21 a 26) ----
+    
+    # Operación 21: Verifica la excepción al buscar un documento que no está registrado
+    ejecutar(21, "Buscar cliente inexistente por documento",
+             lambda: sistema.buscar_cliente("9999999999"))
+
+    # Operación 22: Prueba la búsqueda exitosa de cliente/servicio y confirmación con cupón de texto 'UNAD20'
+    def op22():
+        cliente = sistema.buscar_cliente("1012345678")  # Localiza a Ana María Rojas por su cédula
+        servicio = sistema.buscar_servicio("SRV-003")  # Localiza la Asesoría por su código único
+        r = sistema.crear_reserva(cliente, servicio, 2, modalidad="virtual")  # Crea la reserva por 2 horas
+        r.confirmar(IVA, "UNAD20")  # Confirma aplicando directamente el cupón del 20%
+        cambio = r.procesar(500_000)  # Procesa el pago
+        return f"{r.describir()} | Cupón UNAD20 aplicado | cambio ${cambio:,.2f}"
+    ejecutar(22, "Reserva aplicando cupón institucional 'UNAD20' directamente al confirmar", op22)
+
+    # Operación 23: Verifica el rechazo de un código promocional no registrado en el diccionario CUPONES
+    ejecutar(23, "Intentar aplicar un cupón promocional inexistente",
+             lambda: ctx["sala"].aplicar_descuento("PROMO99", 200_000))
+
+    # Operación 24: Verifica el encadenamiento de ValueError cuando el monto de pago no es numérico
+    def op24():
+        r = sistema.crear_reserva(ctx["carlos"], ctx["sala"], 1, personas=5)  # Crea reserva válida
+        r.confirmar()  # La pasa a estado Confirmada
+        return r.procesar("doscientos mil")  # Envía texto para disparar ValueError -> ParametroInvalidoError
+    ejecutar(24, "Procesar pago con texto inválido (encadenamiento de ValueError)", op24)
+
+    # Operación 25: Dispara la excepción CalculoInconsistenteError (código SFJ-501)
+    ejecutar(25, "Cálculo de costo inconsistente por bono regalo mayor al subtotal (SFJ-501)",
+             lambda: ctx["sala"].calcular_costo(1, IVA, bono_regalo=500_000, personas=5))
+
+    # Operación 26: Verifica el descuento real de stock en AlquilerEquipo y consulta de historial por cliente
+    def op26():
+        # En la Op 14 Carlos alquiló 3 portátiles de los 10 iniciales, por lo que deben quedar 7 disponibles
+        stock_actual = ctx["equipo"].unidades
+        historial_ana = len(sistema.obtener_reservas_cliente("1012345678"))
+        return f"Stock actual de '{ctx['equipo'].nombre}': {stock_actual} unid. | Reservas de Ana: {historial_ana}"
+    ejecutar(26, "Verificar descuento de inventario en equipos e historial por cliente", op26)
+
     # ------------------------- REPORTE FINAL -------------------------
     print("\n" + "=" * 78)
     print(" REPORTE FINAL")
     print("=" * 78)
-    for r in sistema.reservas:  # Lista todas las reservas registradas
+    for r in sistema.reservas:  # Recorre e imprime todas las reservas registradas en el sistema
         print("  •", r.describir())
-    datos = sistema.resumen()  # Totales del sistema
+    datos = sistema.resumen()  # Obtiene el diccionario con las métricas finales
     print(f"\n  Clientes: {datos['clientes']} | Servicios: {datos['servicios']} | "
           f"Reservas: {datos['reservas']} (procesadas {datos['procesadas']}, canceladas {datos['canceladas']})")
     print(f"  Ingresos procesados: ${datos['ingresos']:,.2f}")
@@ -171,5 +210,5 @@ def main():
     log.info("=== Simulación finalizada: %s ===", resultados)
 
 
-if __name__ == "__main__":  # Punto de entrada del programa
+if __name__ == "__main__":  # Punto de entrada principal del script
     main()
