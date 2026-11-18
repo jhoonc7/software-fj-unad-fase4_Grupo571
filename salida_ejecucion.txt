@@ -1,0 +1,81 @@
+==============================================================================
+ SOFTWARE FJ - Sistema Integral de Gestión de Clientes, Servicios y Reservas
+==============================================================================
+
+[01] Registrar cliente válido (Ana María Rojas)
+     ✓ OK: CLI-001 | Ana María Rojas | Doc. 1012345678 | ana***@correo.com
+
+[02] Registrar cliente con correo inválido
+     ✗ ERROR CONTROLADO: [SFJ-101] El correo 'pedro.gomez@' no tiene un formato válido.
+
+[03] Registrar cliente con números en el nombre y teléfono corto
+     ✗ ERROR CONTROLADO: [SFJ-101] El nombre 'Luis 2024' no puede contener números.
+
+[04] Registrar cliente válido (Carlos Pérez)
+     ✓ OK: CLI-002 | Carlos Pérez | Doc. 1098765432 | car***@empresa.co
+
+[05] Registrar cliente con documento duplicado
+     ✗ ERROR CONTROLADO: [SFJ-102] Ya existe un cliente con documento 1012345678.
+
+[06] Crear servicio: Reserva de sala
+     ✓ OK: SRV-001 | Sala 'Sala Innovación' | Capacidad 20 | $80,000/h | Disponible
+
+[07] Crear servicio: Alquiler de equipos
+     ✓ OK: SRV-002 | Equipo 'Portátil Core i7' | 10 unid. | $15,000/h + depósito $100,000 | Disponible
+
+[08] Crear servicio: Asesoría especializada
+     ✓ OK: SRV-003 | Asesoría 'Arquitectura de Software' (Python POO, nivel experto) | $120,000/h | Disponible
+
+[09] Crear servicio con tarifa negativa
+     ✗ ERROR CONTROLADO: [SFJ-201] Tarifa por hora inválida: -5000.
+
+[10] Crear asesoría con nivel inexistente
+     ✗ ERROR CONTROLADO: [SFJ-201] Nivel de asesoría 'maestro' no existe.
+
+[11] Crear alquiler de equipo sin parámetros obligatorios (encadenamiento)
+     ✗ ERROR CONTROLADO: [SFJ-301] No se pudo crear el servicio AlquilerEquipo: parámetros incompletos.
+       ↳ causa original: TypeError: AlquilerEquipo.__init__() missing 2 required positional arguments: 'tarifa_hora' and 'unidades'
+
+[12] Reserva de sala: crear, confirmar (IVA 19 %) y procesar pago
+     ✓ OK: RES-001 | Ana María Rojas -> Sala Innovación | 3 h | Procesada | $314,160.00 | cambio $85,840.00
+
+[13] Reserva de sala que excede la capacidad
+     ✗ ERROR CONTROLADO: [SFJ-401] No se pudo crear la reserva: La sala 'Sala Innovación' admite 20 personas; se pidieron 35.
+       ↳ causa original: ParametroInvalidoError: [SFJ-201] La sala 'Sala Innovación' admite 20 personas; se pidieron 35.
+
+[14] Alquiler de 3 portátiles con 10 % de descuento y pago insuficiente
+     ✗ ERROR CONTROLADO: [SFJ-401] Pago insuficiente para RES-002: $200,000.00 de $1,263,780.00.
+
+[15] Reintentar el pago del alquiler con el valor correcto
+     ✓ OK: cambio $236,220.00 | RES-002 | Carlos Pérez -> Portátil Core i7 | 24 h | Procesada | $1,263,780.00
+
+[16] Reservar una asesoría mientras el servicio está desactivado
+     ✗ ERROR CONTROLADO: [SFJ-401] No se pudo crear la reserva: El servicio 'Arquitectura de Software' no está disponible.
+       ↳ causa original: ServicioNoDisponibleError: [SFJ-301] El servicio 'Arquitectura de Software' no está disponible.
+
+[17] Confirmar y cancelar una asesoría; intentar procesarla después
+     ✗ ERROR CONTROLADO: [SFJ-402] La reserva RES-003 está Cancelada; debe estar Confirmada.
+
+[18] Crear reserva con duración faltante
+     ✗ ERROR CONTROLADO: [SFJ-401] No se pudo crear la reserva: Falta la duración de la reserva.
+       ↳ causa original: ParametroInvalidoError: [SFJ-201] Falta la duración de la reserva.
+
+[19] Sobrecarga: variantes de cálculo de costos y descuentos
+     ✓ OK: base $432,000 | +IVA $514,080 | +IVA-15 % $436,968 | 20 % $411,264 | cupón FJ10 $462,672
+
+[20] Cálculo con descuento fuera de rango (150 %)
+     ✗ ERROR CONTROLADO: [SFJ-201] Descuento fuera de rango: 1.5.
+
+==============================================================================
+ REPORTE FINAL
+==============================================================================
+  • RES-001 | Ana María Rojas -> Sala Innovación | 3 h | Procesada | $314,160.00
+  • RES-002 | Carlos Pérez -> Portátil Core i7 | 24 h | Procesada | $1,263,780.00
+  • RES-003 | Carlos Pérez -> Arquitectura de Software | 2 h | Cancelada | $573,580.00
+
+  Clientes: 2 | Servicios: 3 | Reservas: 3 (procesadas 2, canceladas 1)
+  Ingresos procesados: $1,577,940.00
+  Operaciones exitosas: 8 | con error controlado: 12
+  Log de eventos: /home/claude/software-fj/logs/software_fj.log
+
+  El sistema terminó la simulación sin interrupciones.
