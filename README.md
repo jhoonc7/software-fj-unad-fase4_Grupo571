@@ -50,8 +50,7 @@ software-fj/
 | `try/except/finally` | `Reserva.procesar()`, `main.ejecutar()` |
 | Encadenamiento (`raise … from …`) | `TypeError` → `ServicioNoDisponibleError`; `ParametroInvalidoError` → `ReservaInvalidaError`; `ValueError` → `ParametroInvalidoError` |
 | Logs | `logging` en `logs/software_fj.log` (INFO, WARNING, ERROR, DEBUG) |
-| Tkinter | Interfaz Gráfica (Tkinter) <img width="3708" height="2268" alt="image" src="https://github.com/user-attachments/assets/e898b465-acec-4a2a-864f-5d9e70a2ceff" />
- |
+ Tkinter | software_fj/interfaz.py para visualización de servicios reutilizando las clases del sistema | | Herencia (Interfaz) | Uso de ReservaSala, AlquilerEquipo y Asesoria heredadas de Servicio | | Polimorfismo (Interfaz) | Ejecución de describir() sobre diferentes tipos de servicios desde una misma interfaz gráfica |
 
 
 ## Operaciones simuladas
