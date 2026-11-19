@@ -1,5 +1,19 @@
 import tkinter as tk
+"""
+interfaz.py
+-----------
 
+Interfaz gráfica desarrollada mediante Tkinter para
+visualizar los servicios implementados en Software FJ.
+
+Esta interfaz permite evidenciar la aplicación práctica
+de conceptos como:
+
+- Abstracción
+- Herencia
+- Polimorfismo
+- Programación Orientada a Objetos
+"""
 from software_fj.servicios import (
     ReservaSala,
     AlquilerEquipo,
