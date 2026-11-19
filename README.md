@@ -50,6 +50,8 @@ software-fj/
 | `try/except/finally` | `Reserva.procesar()`, `main.ejecutar()` |
 | Encadenamiento (`raise … from …`) | `TypeError` → `ServicioNoDisponibleError`; `ParametroInvalidoError` → `ReservaInvalidaError`; `ValueError` → `ParametroInvalidoError` |
 | Logs | `logging` en `logs/software_fj.log` (INFO, WARNING, ERROR, DEBUG) |
+<img width="3632" height="2268" alt="image" src="https://github.com/user-attachments/assets/4728f193-50dc-4170-a266-7fbacb33c84e" />
+
 
 ## Operaciones simuladas
 
@@ -75,6 +77,7 @@ software-fj/
 | 24 | Procesar pago con texto inválido (no numérico) | Error encadenado (`ValueError` → `SFJ-201`) |
 | 25 | Cálculo inconsistente por bono regalo mayor al subtotal | Error controlado (`SFJ-501`) |
 | 26 | Verificar descuento real de stock en equipos e historial por cliente | Éxito |
+| 27 | Documentacion interfaz Tkinter y conceptos aplicados | Éxito |
 
 ## Integrantes – Grupo 213023_571
 
