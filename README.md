@@ -50,7 +50,24 @@ software-fj/
 | `try/except/finally` | `Reserva.procesar()`, `main.ejecutar()` |
 | Encadenamiento (`raise … from …`) | `TypeError` → `ServicioNoDisponibleError`; `ParametroInvalidoError` → `ReservaInvalidaError`; `ValueError` → `ParametroInvalidoError` |
 | Logs | `logging` en `logs/software_fj.log` (INFO, WARNING, ERROR, DEBUG) |
-<img width="3632" height="2268" alt="image" src="https://github.com/user-attachments/assets/4728f193-50dc-4170-a266-7fbacb33c84e" />
+| Logs | Interfaz Gráfica (Tkinter)
+Con el propósito de atender la retroalimentación realizada por el tutor, se incorporó una interfaz gráfica básica utilizando la biblioteca Tkinter de Python.
+
+La interfaz permite visualizar los servicios implementados dentro del sistema Software FJ reutilizando las clases desarrolladas en el proyecto.
+
+Conceptos evidenciados mediante la interfaz:
+
+Abstracción.
+Herencia.
+Polimorfismo.
+Encapsulación.
+Manejo de excepciones.
+Programación Orientada a Objetos.
+Archivo implementado:
+
+software_fj/interfaz.py
+
+La interfaz se integra con los servicios especializados del sistema y permite complementar la aplicación práctica de los conceptos desarrollados durante el curso de Programación. |
 
 
 ## Operaciones simuladas
